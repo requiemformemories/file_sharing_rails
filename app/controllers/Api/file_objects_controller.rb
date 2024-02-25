@@ -18,7 +18,7 @@ module Api
 
     def update
       file_object = FileObject.find_or_initialize_by(key: @key, bucket_id: @bucket.id)
-      if request.body.empty?
+      if request.body.size.zero?
         render json: { message: 'File is empty.' }, status: :bad_request
         return
       end
@@ -59,7 +59,7 @@ module Api
     private
 
     def set_bucket
-      @bucket = Bucket.find_by(id: params[:bucket_id])
+      @bucket = Bucket.find_by(id: params[:bucket_id], user_id: @current_user.id)
 
       return unless @bucket.nil?
 

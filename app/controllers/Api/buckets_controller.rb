@@ -6,8 +6,7 @@ module Api
       previous_id = params[:previous_id]
       limit = params[:limit] || 25
 
-      # TODO: get buckets that belong to a user
-      @buckets = Bucket.all
+      @buckets = Bucket.where(user_id: @current_user.id).all
       @buckets = @buckets.where('id < ?', previous_id) if previous_id.present?
       @buckets = @buckets.order(created_at: :desc).limit(limit)
 
@@ -15,8 +14,8 @@ module Api
     end
 
     def create
-      # TODO: the bucket should belongs to the user
       @bucket = Bucket.new(bucket_params)
+      @bucket.user_id = @current_user.id
 
       if @bucket.save
         render json: BucketPresenter.new(@bucket).present, status: :created
@@ -26,8 +25,7 @@ module Api
     end
 
     def destroy
-      # TODO: examine if the bucket belongs to the user
-      @bucket = Bucket.find_by(id: params[:id])
+      @bucket = Bucket.find_by(id: params[:id], user_id: @current_user.id)
 
       if @bucket.nil?
         render json: "Bucket with id##{params[:id]} is not found.", status: :not_found

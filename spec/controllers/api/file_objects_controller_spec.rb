@@ -14,22 +14,22 @@ RSpec.describe Api::FileObjectsController, type: :controller do
     request.env['HTTP_AUTHORIZATION'] = credentials if is_http_authenticated
   end
 
-  RSpec.shared_examples "using signature to send request" do |parameter|
+  RSpec.shared_examples 'using signature to send request' do |_parameter|
     context 'when the request pass the signature auth' do
       let(:is_http_authenticated) { false }
       let(:access_key) { create(:access_key, user_id: user.id) }
-      let(:params) do 
-        { 
-          bucket_name: bucket.name, 
+      let(:params) do
+        {
+          bucket_name: bucket.name,
           key: 'c/d/image.jpg',
           access_id: access_key.id,
           expired_at: (Time.current + 1.hour).iso8601,
           signature: 'test_signature'
-        } 
+        }
       end
 
-      before do 
-        allow(SignatureExaminer).to receive(:new).and_return(double('SignatureExaminer', valid_signature?: true)) 
+      before do
+        allow(SignatureExaminer).to receive(:new).and_return(double('SignatureExaminer', valid_signature?: true))
       end
 
       it 'returns successfully' do
@@ -37,22 +37,22 @@ RSpec.describe Api::FileObjectsController, type: :controller do
         expect(response).to be_successful
       end
     end
-    
+
     context 'when the access key that the signature used is already revoked' do
       let(:is_http_authenticated) { false }
       let(:access_key) { create(:access_key, user_id: user.id, revoked_at: (Time.current - 1.hour).iso8601) }
-      let(:params) do 
-        { 
-          bucket_name: bucket.name, 
+      let(:params) do
+        {
+          bucket_name: bucket.name,
           key: 'c/d/image.jpg',
           access_id: access_key.id,
           expired_at: (Time.current + 1.hour).iso8601,
           signature: 'test_signature'
-        } 
+        }
       end
 
-      before do 
-        allow(SignatureExaminer).to receive(:new).and_return(double('SignatureExaminer', valid_signature?: true)) 
+      before do
+        allow(SignatureExaminer).to receive(:new).and_return(double('SignatureExaminer', valid_signature?: true))
       end
 
       it 'returns the error messages' do
@@ -66,18 +66,18 @@ RSpec.describe Api::FileObjectsController, type: :controller do
     context 'when the access key that the signature is invalid' do
       let(:is_http_authenticated) { false }
       let(:access_key) { create(:access_key, user_id: user.id) }
-      let(:params) do 
-        { 
-          bucket_name: bucket.name, 
+      let(:params) do
+        {
+          bucket_name: bucket.name,
           key: 'c/d/image.jpg',
           access_id: access_key.id,
           expired_at: (Time.current + 1.hour).iso8601,
           signature: 'test_signature'
-        } 
+        }
       end
 
-      before do 
-        allow(SignatureExaminer).to receive(:new).and_return(double('SignatureExaminer', valid_signature?: false)) 
+      before do
+        allow(SignatureExaminer).to receive(:new).and_return(double('SignatureExaminer', valid_signature?: false))
       end
 
       it 'returns the error messages' do
@@ -91,18 +91,18 @@ RSpec.describe Api::FileObjectsController, type: :controller do
     context 'when the signed request is already expired' do
       let(:is_http_authenticated) { false }
       let(:access_key) { create(:access_key, user_id: user.id) }
-      let(:params) do 
-        { 
-          bucket_name: bucket.name, 
+      let(:params) do
+        {
+          bucket_name: bucket.name,
           key: 'c/d/image.jpg',
           access_id: access_key.id,
           expired_at: (Time.current - 1.hour).iso8601,
           signature: 'test_signature'
-        } 
+        }
       end
 
-      before do 
-        allow(SignatureExaminer).to receive(:new).and_return(double('SignatureExaminer', valid_signature?: true)) 
+      before do
+        allow(SignatureExaminer).to receive(:new).and_return(double('SignatureExaminer', valid_signature?: true))
       end
 
       it 'returns the error messages' do
@@ -203,7 +203,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
     end
 
     include_examples 'using signature to send request'
-    
+
     context 'when the request is does not pass the http auth' do
       let(:is_http_authenticated) { false }
 

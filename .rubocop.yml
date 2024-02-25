@@ -20,6 +20,7 @@ Metrics/AbcSize:
   Max: 25
   Exclude:
     - 'db/migrate/*.rb'
+    - 'app/controllers/api/base_controller.rb' # TODO: refactor the authenticate feature
 
 Naming/AccessorMethodName:
   Enabled: false

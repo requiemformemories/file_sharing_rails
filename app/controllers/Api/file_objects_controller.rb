@@ -10,7 +10,10 @@ module Api
       limit = params[:limit] || 25
 
       file_objects = FileObject.includes(file_attachment: :blob).where(bucket_id: @bucket.id)
-      cursor_id_query = file_objects.select(:id).where(key: previous_key, bucket_id: @bucket.id) if previous_key.present?
+      if previous_key.present?
+        cursor_id_query = file_objects.select(:id).where(key: previous_key,
+                                                         bucket_id: @bucket.id)
+      end
       file_objects = file_objects.where('id < (?)', cursor_id_query) if cursor_id_query.present?
       file_objects = file_objects.order(id: :desc).limit(limit)
 

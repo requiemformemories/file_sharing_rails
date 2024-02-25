@@ -13,12 +13,13 @@ module Api
     def authenticate_signature!
       return if controller_name != 'file_objects' || %w[download update destroy].exclude?(action_name)
       return if params[:signature].blank?
-      
+
       access_key = AccessKey.where('expired_at > ? OR expired_at IS NULL', Time.current)
                             .find_by(id: params[:access_id], revoked_at: nil)
       raise InvalidCredentials if access_key.nil?
+
       is_valid = SignatureExaminer.new(
-        access_key: access_key,
+        access_key:,
         bucket_name: params[:bucket_name],
         key: params[:key],
         action: action_name,

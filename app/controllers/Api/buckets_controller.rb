@@ -7,7 +7,10 @@ module Api
       limit = params[:limit] || 25
 
       @buckets = Bucket.where(user_id: @current_user.id).all
-      cursor_id_query = @buckets.select(:id).where(name: previous_name, user_id: @current_user.id) if previous_name.present?
+      if previous_name.present?
+        cursor_id_query = @buckets.select(:id).where(name: previous_name,
+                                                     user_id: @current_user.id)
+      end
       @buckets = @buckets.where('id < (?)', cursor_id_query) if cursor_id_query.present?
       @buckets = @buckets.order(id: :desc).limit(limit)
 

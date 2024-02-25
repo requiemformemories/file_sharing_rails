@@ -5,6 +5,6 @@ class Bucket < ApplicationRecord
 
   belongs_to :user
   has_many :file_objects, dependent: :destroy
-  validates :name, presence: true, uniqueness: true, 
+  validates :name, presence: true, uniqueness: true,
                    format: { with: /\A[\w\-]+\z/, message: NAME_FORMAT_ERROR_MESSAGE }
 end

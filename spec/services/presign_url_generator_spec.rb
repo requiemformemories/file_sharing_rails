@@ -7,7 +7,7 @@ RSpec.describe PresignUrlGenerator do
   let(:params) do
     {
       host: 'http://localhost:3000',
-      access_key: access_key,
+      access_key:,
       bucket_name: 'bucket_name',
       key: 'file_key',
       action: 'download',

@@ -24,12 +24,12 @@ class PresignUrlGenerator
     }
 
     case @action
-    when "download"
+    when 'download'
       api_bucket_objects_download_url(params)
-    when "update", "destroy"
+    when 'update', 'destroy'
       api_bucket_objects_url(params)
     else
-      raise ArgumentError, "Invalid action"
+      raise ArgumentError, 'Invalid action'
     end
   end
 

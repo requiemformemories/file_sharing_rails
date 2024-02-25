@@ -10,7 +10,7 @@ class SignatureGenerator
   end
 
   def generate
-    OpenSSL::HMAC.hexdigest("SHA256", @access_key.secret, signature_data)
+    OpenSSL::HMAC.hexdigest('SHA256', @access_key.secret, signature_data)
   end
 
   private

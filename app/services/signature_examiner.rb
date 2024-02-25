@@ -33,6 +33,7 @@ class SignatureExaminer
       bucket_name: @bucket_name,
       key: @key,
       action: @action,
-      expired_at: @expired_at).generate
+      expired_at: @expired_at
+    ).generate
   end
 end

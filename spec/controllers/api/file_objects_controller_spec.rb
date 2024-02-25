@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::FileObjectsController, type: :controller do
   let(:user) { User.create(username: 'user', password: 'password') }
-  let(:credentials) { ActionController::HttpAuthentication::Basic.encode_credentials(user.username, user.password) }  
+  let(:credentials) { ActionController::HttpAuthentication::Basic.encode_credentials(user.username, user.password) }
   let(:is_authenticated) { true }
   let(:image_jpg_file) { File.open(Rails.root.join('spec', 'fixtures', 'image.jpg')) }
   let(:image_png_file) { File.open(Rails.root.join('spec', 'fixtures', 'image.png')) }

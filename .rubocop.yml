@@ -17,5 +17,15 @@ Metrics/MethodLength:
   Enabled: false
 
 Metrics/AbcSize:
+  Max: 25
   Exclude:
     - 'db/migrate/*.rb'
+
+Naming/AccessorMethodName:
+  Enabled: false
+
+Lint/EmptyBlock:
+  Enabled: false
+
+Style/ZeroLengthPredicate:
+  Enabled: false

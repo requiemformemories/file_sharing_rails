@@ -11,6 +11,11 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   namespace :api do
-    resources :buckets, only: %i[index create destroy]
+    resources :buckets, only: %i[index create destroy] do
+      resources :objects, controller: :file_objects, only: %i[index]
+      get 'objects/download', controller: :file_objects, action: :download
+      put 'objects', controller: :file_objects, action: :update
+      delete 'objects', controller: :file_objects, action: :destroy
+    end
   end
 end

@@ -109,7 +109,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
         {
           bucket_name: bucket.name,
           key: 'c/d/image.jpg',
-          access_id: access_key.id,
+          access_id: access_key.access_id,
           expired_at: (Time.current + 1.hour).iso8601,
           signature: 'test_signature'
         }
@@ -132,7 +132,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
         {
           bucket_name: bucket.name,
           key: 'c/d/image.jpg',
-          access_id: access_key.id,
+          access_id: access_key.access_id,
           expired_at: (Time.current + 1.hour).iso8601,
           signature: 'test_signature'
         }
@@ -157,7 +157,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
         {
           bucket_name: bucket.name,
           key: 'c/d/image.jpg',
-          access_id: access_key.id,
+          access_id: access_key.access_id,
           expired_at: (Time.current + 1.hour).iso8601,
           signature: 'test_signature'
         }
@@ -251,7 +251,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
         {
           bucket_name: bucket.name,
           key: 'file.json',
-          access_id: access_key.id,
+          access_id: access_key.access_id,
           expired_at: (Time.current + 1.hour).iso8601,
           signature: 'test_signature'
         }
@@ -274,7 +274,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
         {
           bucket_name: bucket.name,
           key: 'file.json',
-          access_id: access_key.id,
+          access_id: access_key.access_id,
           expired_at: (Time.current + 1.hour).iso8601,
           signature: 'test_signature'
         }
@@ -299,7 +299,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
         {
           bucket_name: bucket.name,
           key: 'file.json',
-          access_id: access_key.id,
+          access_id: access_key.access_id,
           expired_at: (Time.current + 1.hour).iso8601,
           signature: 'test_signature'
         }

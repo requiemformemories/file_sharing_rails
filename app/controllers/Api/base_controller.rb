@@ -15,7 +15,7 @@ module Api
       return if params[:signature].blank?
 
       access_key = AccessKey.where('expired_at > ? OR expired_at IS NULL', Time.current)
-                            .find_by(id: params[:access_id], revoked_at: nil)
+                            .find_by(access_id: params[:access_id], revoked_at: nil)
       raise InvalidCredentials if access_key.nil?
 
       is_valid = SignatureExaminer.new(

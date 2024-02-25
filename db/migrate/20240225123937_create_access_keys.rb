@@ -2,7 +2,8 @@
 
 class CreateAccessKeys < ActiveRecord::Migration[7.1]
   def change
-    create_table :access_keys, id: :string do |t|
+    create_table :access_keys do |t|
+      t.string :access_id, null: false
       t.integer :user_id, null: false
       t.string :secret, null: false
       t.datetime :revoked_at

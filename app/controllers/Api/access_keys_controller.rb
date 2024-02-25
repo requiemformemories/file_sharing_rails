@@ -7,8 +7,12 @@ module Api
       limit = params[:limit] || 25
 
       access_keys = AccessKey.where(user_id: @current_user.id)
-      access_keys = access_keys.where('id < ?', previous_id) if previous_id.present?
-      access_keys = access_keys.order(created_at: :desc).limit(limit)
+      if previous_id.present?
+        cursor_id_query = access_keys.select(:id).where(access_id: previous_id,
+                                                     user_id: @current_user.id)
+      end
+      access_keys = access_keys.where('id < (?)', cursor_id_query) if cursor_id_query.present?
+      access_keys = access_keys.order(id: :desc).limit(limit)
 
       render json: AccessKeyPresenter.present_collection(access_keys, provide_secret: false)
     end
@@ -27,7 +31,7 @@ module Api
     end
 
     def revoke
-      access_key = AccessKey.find_by(id: params[:id], user_id: @current_user.id)
+      access_key = AccessKey.find_by(access_id: params[:id], user_id: @current_user.id)
 
       if access_key.nil?
         render json: "AccessKey with id##{params[:id]} is not found.", status: :not_found

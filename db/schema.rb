@@ -11,7 +11,8 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2024_02_25_123937) do
-  create_table "access_keys", id: :string, force: :cascade do |t|
+  create_table "access_keys", force: :cascade do |t|
+    t.string "access_id", null: false
     t.integer "user_id", null: false
     t.string "secret", null: false
     t.datetime "revoked_at"

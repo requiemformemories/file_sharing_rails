@@ -23,8 +23,8 @@ RSpec.describe Api::AccessKeysController, type: [:controller] do
 
       expect(response).to be_successful
       response_body = JSON.parse(response.body)
-      expect(response_body[0]['id']).to eq(access_key2.id)
-      expect(response_body[1]['id']).to eq(access_key1.id)
+      expect(response_body[0]['id']).to eq(access_key2.access_id)
+      expect(response_body[1]['id']).to eq(access_key1.access_id)
     end
 
     context 'when the request is not authenticated' do
@@ -52,7 +52,7 @@ RSpec.describe Api::AccessKeysController, type: [:controller] do
     end
 
     context 'with previous_id' do
-      let(:params) { { previous_id: access_key2.id } }
+      let(:params) { { previous_id: access_key2.access_id } }
 
       it 'returns the records successfully' do
         subject
@@ -60,7 +60,7 @@ RSpec.describe Api::AccessKeysController, type: [:controller] do
         expect(response).to be_successful
 
         response_body = JSON.parse(response.body)
-        expect(response_body[0]['id']).to eq(access_key1.id)
+        expect(response_body[0]['id']).to eq(access_key1.access_id)
       end
     end
   end
@@ -103,7 +103,7 @@ RSpec.describe Api::AccessKeysController, type: [:controller] do
   describe 'POST #revoke' do
     subject { post :revoke, params: }
 
-    let(:params) { { id: access_key.id } }
+    let(:params) { { id: access_key.access_id } }
     let(:access_key) { create(:access_key, user_id: user.id) }
 
     it 'returns record successfully' do
@@ -112,7 +112,7 @@ RSpec.describe Api::AccessKeysController, type: [:controller] do
       expect(response).to have_http_status(:ok)
 
       response_body = JSON.parse(response.body)
-      expect(response_body['id']).to eq(access_key.id)
+      expect(response_body['id']).to eq(access_key.access_id)
       expect(response_body['revoked_at']).not_to be_nil
     end
 
@@ -140,7 +140,7 @@ RSpec.describe Api::AccessKeysController, type: [:controller] do
         subject
 
         expect(response).to have_http_status(:bad_request)
-        expect(response.body).to include("AccessKey with id##{access_key.id} is already revoked.")
+        expect(response.body).to include("AccessKey with id##{access_key.access_id} is already revoked.")
       end
     end
   end

@@ -16,7 +16,7 @@ class AccessKey < ApplicationRecord
   private
 
   def generate_access_key
-    self.id = SecureRandom.uuid
+    self.access_id = SecureRandom.uuid
     self.secret = SecureRandom.hex(32)
   end
 end

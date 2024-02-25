@@ -7,7 +7,7 @@ class AccessKeyPresenter
 
   def present(provide_secret:)
     {
-      id: @access_key.id,
+      id: @access_key.access_id,
       created_at: @access_key.created_at.iso8601,
       expired_at: @access_key.expired_at&.iso8601,
       revoked_at: @access_key.revoked_at&.iso8601

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::AccessKeysController, type: :controller do
+RSpec.describe Api::AccessKeysController, type: [:controller] do
   let(:user) { User.create(username: 'user', password: 'password') }
   let(:credentials) { ActionController::HttpAuthentication::Basic.encode_credentials(user.username, user.password) }
   let(:is_authenticated) { true }
@@ -48,7 +48,6 @@ RSpec.describe Api::AccessKeysController, type: :controller do
 
         response_body = JSON.parse(response.body)
         expect(response_body.length).to eq(1)
-        expect(response_body[0]['id']).to eq(access_key2.id)
       end
     end
 

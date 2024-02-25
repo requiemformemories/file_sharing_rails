@@ -17,7 +17,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
   describe 'GET #index' do
     subject { get :index, params:, format: :json }
 
-    let(:params) { { bucket_id: bucket.id } }
+    let(:params) { { bucket_name: bucket.name } }
     let!(:bucket) { create(:bucket, user_id: user.id) }
     let!(:file_object1) { create(:file_object, bucket_id: bucket.id, key: 'a/b/image1.jpg', file: image_jpg_file) }
     let!(:file_object2) { create(:file_object, bucket_id: bucket.id, key: 'a/b/image2.png', file: image_png_file) }
@@ -50,7 +50,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
     end
 
     context 'with limit' do
-      let(:params) { { bucket_id: bucket.id, limit: 1 } }
+      let(:params) { { bucket_name: bucket.name, limit: 1 } }
 
       it 'returns the records successfully' do
         subject
@@ -63,8 +63,8 @@ RSpec.describe Api::FileObjectsController, type: :controller do
       end
     end
 
-    context 'with previous_id' do
-      let(:params) { { bucket_id: bucket.id, previous_id: file_object2.id } }
+    context 'with previous_key' do
+      let(:params) { { bucket_name: bucket.name, previous_key: file_object2.key } }
 
       it 'returns the records successfully' do
         subject
@@ -80,7 +80,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
   describe 'PUT #update' do
     subject { put :update, params:, body:, format: :json }
 
-    let(:params) { { bucket_id: bucket.id, key: 'c/d/image.jpg' } }
+    let(:params) { { bucket_name: bucket.name, key: 'c/d/image.jpg' } }
     let(:body) { File.read(Rails.root.join('spec', 'fixtures', 'image.jpg')) }
     let!(:bucket) { create(:bucket, user_id: user.id) }
 
@@ -114,7 +114,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
     end
 
     context 'when the key is not provided' do
-      let(:params) { { bucket_id: bucket.id, key: '' } }
+      let(:params) { { bucket_name: bucket.name, key: '' } }
 
       it 'returns the error messages' do
         subject
@@ -129,7 +129,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
   describe 'DELETE #destroy' do
     subject { delete :destroy, params:, format: :json }
 
-    let(:params) { { bucket_id: bucket.id, key: 'a/b/image_to_delete.jpg' } }
+    let(:params) { { bucket_name: bucket.name, key: 'a/b/image_to_delete.jpg' } }
     let!(:bucket) { create(:bucket, user_id: user.id) }
     let!(:file_object_to_delete) do
       create(:file_object, bucket_id: bucket.id, key: 'a/b/image_to_delete.jpg', file: image_jpg_file)
@@ -160,7 +160,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
   describe 'GET #download' do
     subject { get :download, params:, format: :json }
 
-    let(:params) { { bucket_id: bucket.id, key: 'file.json' } }
+    let(:params) { { bucket_name: bucket.name, key: 'file.json' } }
     let!(:bucket) { create(:bucket, user_id: user.id) }
     let!(:file_object1) { create(:file_object, bucket_id: bucket.id, key: 'file.json', file: json_file) }
 

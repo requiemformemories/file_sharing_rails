@@ -7,7 +7,6 @@ class BucketPresenter
 
   def present
     {
-      id: @bucket.id,
       name: @bucket.name,
       created_at: @bucket.created_at.iso8601
     }

@@ -15,8 +15,8 @@ RSpec.describe Api::BucketsController, type: :controller do
     subject { get :index, params:, format: :json }
 
     let(:params) { {} }
-    let!(:bucket1) { create(:bucket, name: 'Bucket 1', user_id: user.id) }
-    let!(:bucket2) { create(:bucket, name: 'Bucket 2', user_id: user.id) }
+    let!(:bucket1) { create(:bucket, name: 'bucket_1', user_id: user.id) }
+    let!(:bucket2) { create(:bucket, name: 'bucket_2', user_id: user.id) }
 
     it 'returns the records successfully' do
       subject
@@ -25,8 +25,8 @@ RSpec.describe Api::BucketsController, type: :controller do
       expect(response.content_type).to eq('application/json; charset=utf-8')
 
       response_body = JSON.parse(response.body)
-      expect(response_body[0]['name']).to eq('Bucket 2')
-      expect(response_body[1]['name']).to eq('Bucket 1')
+      expect(response_body[0]['name']).to eq('bucket_2')
+      expect(response_body[1]['name']).to eq('bucket_1')
     end
 
     context 'when the request is not authenticated' do
@@ -50,12 +50,12 @@ RSpec.describe Api::BucketsController, type: :controller do
 
         response_body = JSON.parse(response.body)
         expect(response_body.length).to eq(1)
-        expect(response_body[0]['name']).to eq('Bucket 2')
+        expect(response_body[0]['name']).to eq('bucket_2')
       end
     end
 
-    context 'with previous_id' do
-      let(:params) { { previous_id: bucket2.id } }
+    context 'with previous_name' do
+      let(:params) { { previous_name: bucket2.name } }
 
       it 'returns the records successfully' do
         subject
@@ -63,7 +63,7 @@ RSpec.describe Api::BucketsController, type: :controller do
         expect(response).to be_successful
 
         response_body = JSON.parse(response.body)
-        expect(response_body[0]['name']).to eq('Bucket 1')
+        expect(response_body[0]['name']).to eq('bucket_1')
       end
     end
   end
@@ -71,12 +71,12 @@ RSpec.describe Api::BucketsController, type: :controller do
   describe 'POST #create' do
     subject { post :create, params:, format: :json }
 
-    let(:params) { { name: 'New Bucket' } }
+    let(:params) { { name: 'new_bucket' } }
 
-    it 'creates a new Bucket' do
+    it 'creates a new bucket' do
       expect { subject }.to change(Bucket, :count).by(1)
 
-      expect(Bucket.last).to have_attributes(name: 'New Bucket')
+      expect(Bucket.last).to have_attributes(name: 'new_bucket')
       expect(Bucket.last).to have_attributes(user_id: user.id)
     end
 
@@ -86,7 +86,7 @@ RSpec.describe Api::BucketsController, type: :controller do
       expect(response.content_type).to eq('application/json; charset=utf-8')
 
       response_body = JSON.parse(response.body)
-      expect(response_body['name']).to eq('New Bucket')
+      expect(response_body['name']).to eq('new_bucket')
     end
 
     context 'when the request is not authenticated' do
@@ -103,7 +103,7 @@ RSpec.describe Api::BucketsController, type: :controller do
     context 'with invalid parameters' do
       let(:params) { { name: nil } }
 
-      it 'does not create a new Bucket' do
+      it 'does not create a new bucket' do
         expect { subject }.to change(Bucket, :count).by(0)
       end
 
@@ -121,8 +121,8 @@ RSpec.describe Api::BucketsController, type: :controller do
   describe 'DELETE #destroy' do
     subject { delete :destroy, params:, format: :json }
 
-    let(:params) { { id: bucket_to_be_deleted.id } }
-    let!(:bucket_to_be_deleted) { create(:bucket, name: 'Bucket to be deleted', user_id: user.id) }
+    let(:params) { { name: bucket_to_be_deleted.name } }
+    let!(:bucket_to_be_deleted) { create(:bucket, name: 'bucket_to_be_deleted', user_id: user.id) }
 
     it 'destroys the requested bucket' do
       expect { subject }.to change(Bucket, :count).by(-1)

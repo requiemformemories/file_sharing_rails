@@ -3,12 +3,12 @@
 module Api
   class BucketsController < BaseController
     def index
-      previous_id = params[:previous_id]
+      previous_name = params[:previous_name]
       limit = params[:limit] || 25
 
       @buckets = Bucket.where(user_id: @current_user.id).all
-      @buckets = @buckets.where('id < ?', previous_id) if previous_id.present?
-      @buckets = @buckets.order(id: :desc).limit(limit)
+      @buckets = @buckets.where('name < ?', previous_name) if previous_name.present?
+      @buckets = @buckets.order(created_at: :desc).limit(limit)
 
       render json: BucketPresenter.present_collection(@buckets)
     end
@@ -25,10 +25,10 @@ module Api
     end
 
     def destroy
-      @bucket = Bucket.find_by(id: params[:id], user_id: @current_user.id)
+      @bucket = Bucket.find_by(name: params[:name], user_id: @current_user.id)
 
       if @bucket.nil?
-        render json: "Bucket with id##{params[:id]} is not found.", status: :not_found
+        render json: "Bucket with name #{params[:name]} is not found.", status: :not_found
         return
       end
 

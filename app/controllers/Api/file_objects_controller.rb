@@ -6,12 +6,12 @@ module Api
     before_action :set_key, only: %i[update destroy download]
 
     def index
-      previous_id = params[:previous_id]
+      previous_key = params[:previous_key]
       limit = params[:limit] || 25
 
       file_objects = FileObject.includes(file_attachment: :blob).where(bucket_id: @bucket.id).all
-      file_objects = file_objects.where('id < ?', previous_id) if previous_id.present?
-      file_objects = file_objects.order(id: :desc).limit(limit)
+      file_objects = file_objects.where('key < ?', previous_key) if previous_key.present?
+      file_objects = file_objects.order(created_at: :desc).limit(limit)
 
       render json: FileObjectPresenter.present_collection(file_objects)
     end
@@ -59,11 +59,11 @@ module Api
     private
 
     def set_bucket
-      @bucket = Bucket.find_by(id: params[:bucket_id], user_id: @current_user.id)
+      @bucket = Bucket.find_by(name: params[:bucket_name], user_id: @current_user.id)
 
       return unless @bucket.nil?
 
-      render json: { message: "Bucket with id##{params[:bucket_id]} is not found." }, status: :not_found
+      render json: { message: "Bucket with name #{params[:bucket_name]} is not found." }, status: :not_found
     end
 
     def set_key

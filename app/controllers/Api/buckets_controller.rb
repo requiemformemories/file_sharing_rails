@@ -7,8 +7,9 @@ module Api
       limit = params[:limit] || 25
 
       @buckets = Bucket.where(user_id: @current_user.id).all
-      @buckets = @buckets.where('name < ?', previous_name) if previous_name.present?
-      @buckets = @buckets.order(created_at: :desc).limit(limit)
+      cursor_id_query = @buckets.select(:id).where(name: previous_name, user_id: @current_user.id) if previous_name.present?
+      @buckets = @buckets.where('id < (?)', cursor_id_query) if cursor_id_query.present?
+      @buckets = @buckets.order(id: :desc).limit(limit)
 
       render json: BucketPresenter.present_collection(@buckets)
     end

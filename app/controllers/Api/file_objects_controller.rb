@@ -9,9 +9,10 @@ module Api
       previous_key = params[:previous_key]
       limit = params[:limit] || 25
 
-      file_objects = FileObject.includes(file_attachment: :blob).where(bucket_id: @bucket.id).all
-      file_objects = file_objects.where('key < ?', previous_key) if previous_key.present?
-      file_objects = file_objects.order(created_at: :desc).limit(limit)
+      file_objects = FileObject.includes(file_attachment: :blob).where(bucket_id: @bucket.id)
+      cursor_id_query = file_objects.select(:id).where(key: previous_key, bucket_id: @bucket.id) if previous_key.present?
+      file_objects = file_objects.where('id < (?)', cursor_id_query) if cursor_id_query.present?
+      file_objects = file_objects.order(id: :desc).limit(limit)
 
       render json: FileObjectPresenter.present_collection(file_objects)
     end

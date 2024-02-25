@@ -17,5 +17,9 @@ Rails.application.routes.draw do
       put 'objects', controller: :file_objects, action: :update
       delete 'objects', controller: :file_objects, action: :destroy
     end
+
+    resources :access_keys, only: %i[index create] do
+      post 'revoke', on: :member
+    end
   end
 end

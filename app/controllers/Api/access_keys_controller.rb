@@ -8,7 +8,7 @@ module Api
 
       access_keys = AccessKey.where(user_id: @current_user.id)
       access_keys = access_keys.where('id < ?', previous_id) if previous_id.present?
-      access_keys = access_keys.order(created_at: :desc).limit(limit)
+      access_keys = access_keys.order(id: :desc).limit(limit)
 
       render json: AccessKeyPresenter.present_collection(access_keys, provide_secret: false)
     end

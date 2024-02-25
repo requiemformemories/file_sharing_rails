@@ -8,7 +8,7 @@ module Api
 
       @buckets = Bucket.where(user_id: @current_user.id).all
       @buckets = @buckets.where('id < ?', previous_id) if previous_id.present?
-      @buckets = @buckets.order(created_at: :desc).limit(limit)
+      @buckets = @buckets.order(id: :desc).limit(limit)
 
       render json: BucketPresenter.present_collection(@buckets)
     end

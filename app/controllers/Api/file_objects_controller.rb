@@ -11,7 +11,7 @@ module Api
 
       file_objects = FileObject.includes(file_attachment: :blob).where(bucket_id: @bucket.id).all
       file_objects = file_objects.where('id < ?', previous_id) if previous_id.present?
-      file_objects = file_objects.order(created_at: :desc).limit(limit)
+      file_objects = file_objects.order(id: :desc).limit(limit)
 
       render json: FileObjectPresenter.present_collection(file_objects)
     end

@@ -72,3 +72,5 @@ group :test do
   gem 'rspec-rails', '~> 6.1.1'
   gem 'shoulda-matchers', '~> 6.1.0'
 end
+
+gem 'bcrypt', '~> 3.1.13'

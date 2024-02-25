@@ -5,6 +5,8 @@ module Api
     def index
       previous_id = params[:previous_id]
       limit = params[:limit] || 25
+
+      # TODO: get buckets that belong to a user
       @buckets = Bucket.all
       @buckets = @buckets.where('id < ?', previous_id) if previous_id.present?
       @buckets = @buckets.order(created_at: :desc).limit(limit)
@@ -13,6 +15,7 @@ module Api
     end
 
     def create
+      # TODO: the bucket should belongs to the user
       @bucket = Bucket.new(bucket_params)
 
       if @bucket.save
@@ -23,6 +26,7 @@ module Api
     end
 
     def destroy
+      # TODO: examine if the bucket belongs to the user
       @bucket = Bucket.find_by(id: params[:id])
 
       if @bucket.nil?

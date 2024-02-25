@@ -3,7 +3,6 @@ AllCops:
   Exclude:
     - 'bin/**/*'
     - 'db/schema.rb'
-    - 'app/views/**/*.json.jbuilder'
 
 Style/Documentation:
   Enabled: false
@@ -11,6 +10,8 @@ Style/Documentation:
 Metrics/BlockLength:
   Exclude:
     - 'config/environments/development.rb'
+    - 'spec/**/*_spec.rb' 
+    - 'spec/factories/**/*.rb' 
 
 Metrics/MethodLength:
   Enabled: false

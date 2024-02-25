@@ -5,13 +5,113 @@ require 'rails_helper'
 RSpec.describe Api::FileObjectsController, type: :controller do
   let(:user) { User.create(username: 'user', password: 'password') }
   let(:credentials) { ActionController::HttpAuthentication::Basic.encode_credentials(user.username, user.password) }
-  let(:is_authenticated) { true }
+  let(:is_http_authenticated) { true }
   let(:image_jpg_file) { File.open(Rails.root.join('spec', 'fixtures', 'image.jpg')) }
   let(:image_png_file) { File.open(Rails.root.join('spec', 'fixtures', 'image.png')) }
   let(:json_file) { File.open(Rails.root.join('spec', 'fixtures', 'file.json')) }
 
   before do
-    request.env['HTTP_AUTHORIZATION'] = credentials if is_authenticated
+    request.env['HTTP_AUTHORIZATION'] = credentials if is_http_authenticated
+  end
+
+  RSpec.shared_examples "using signature to send request" do |parameter|
+    context 'when the request pass the signature auth' do
+      let(:is_http_authenticated) { false }
+      let(:access_key) { create(:access_key, user_id: user.id) }
+      let(:params) do 
+        { 
+          bucket_name: bucket.name, 
+          key: 'c/d/image.jpg',
+          access_id: access_key.id,
+          expired_at: (Time.current + 1.hour).iso8601,
+          signature: 'test_signature'
+        } 
+      end
+
+      before do 
+        allow(SignatureExaminer).to receive(:new).and_return(double('SignatureExaminer', valid_signature?: true)) 
+      end
+
+      it 'returns successfully' do
+        subject
+        expect(response).to be_successful
+      end
+    end
+    
+    context 'when the access key that the signature used is already revoked' do
+      let(:is_http_authenticated) { false }
+      let(:access_key) { create(:access_key, user_id: user.id, revoked_at: (Time.current - 1.hour).iso8601) }
+      let(:params) do 
+        { 
+          bucket_name: bucket.name, 
+          key: 'c/d/image.jpg',
+          access_id: access_key.id,
+          expired_at: (Time.current + 1.hour).iso8601,
+          signature: 'test_signature'
+        } 
+      end
+
+      before do 
+        allow(SignatureExaminer).to receive(:new).and_return(double('SignatureExaminer', valid_signature?: true)) 
+      end
+
+      it 'returns the error messages' do
+        subject
+        expect(response).to have_http_status(:unauthorized)
+        response_body = JSON.parse(response.body)
+        expect(response_body['error']).to eq('Invalid credentials')
+      end
+    end
+
+    context 'when the access key that the signature is invalid' do
+      let(:is_http_authenticated) { false }
+      let(:access_key) { create(:access_key, user_id: user.id) }
+      let(:params) do 
+        { 
+          bucket_name: bucket.name, 
+          key: 'c/d/image.jpg',
+          access_id: access_key.id,
+          expired_at: (Time.current + 1.hour).iso8601,
+          signature: 'test_signature'
+        } 
+      end
+
+      before do 
+        allow(SignatureExaminer).to receive(:new).and_return(double('SignatureExaminer', valid_signature?: false)) 
+      end
+
+      it 'returns the error messages' do
+        subject
+        expect(response).to have_http_status(:unauthorized)
+        response_body = JSON.parse(response.body)
+        expect(response_body['error']).to eq('Invalid credentials')
+      end
+    end
+
+    context 'when the signed request is already expired' do
+      let(:is_http_authenticated) { false }
+      let(:access_key) { create(:access_key, user_id: user.id) }
+      let(:params) do 
+        { 
+          bucket_name: bucket.name, 
+          key: 'c/d/image.jpg',
+          access_id: access_key.id,
+          expired_at: (Time.current - 1.hour).iso8601,
+          signature: 'test_signature'
+        } 
+      end
+
+      before do 
+        allow(SignatureExaminer).to receive(:new).and_return(double('SignatureExaminer', valid_signature?: true)) 
+      end
+
+      it 'returns the error messages' do
+        subject
+        expect(response).to have_http_status(:unauthorized)
+        response_body = JSON.parse(response.body)
+        expect(response_body['error']).to eq('Invalid credentials')
+      end
+    end
   end
 
   describe 'GET #index' do
@@ -39,7 +139,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
     end
 
     context 'when the request is not authenticated' do
-      let(:is_authenticated) { false }
+      let(:is_http_authenticated) { false }
 
       it 'returns the error messages' do
         subject
@@ -102,8 +202,10 @@ RSpec.describe Api::FileObjectsController, type: :controller do
       expect(response_body['checksum']).to eq('RV9amDArDEa5hv8s8CTxyQ==')
     end
 
-    context 'when the request is not authenticated' do
-      let(:is_authenticated) { false }
+    include_examples 'using signature to send request'
+    
+    context 'when the request is does not pass the http auth' do
+      let(:is_http_authenticated) { false }
 
       it 'returns the error messages' do
         subject
@@ -146,7 +248,7 @@ RSpec.describe Api::FileObjectsController, type: :controller do
     end
 
     context 'when the request is not authenticated' do
-      let(:is_authenticated) { false }
+      let(:is_http_authenticated) { false }
 
       it 'returns the error messages' do
         subject
@@ -171,8 +273,10 @@ RSpec.describe Api::FileObjectsController, type: :controller do
       expect(response.body).to eq('{ "result": "success" }')
     end
 
-    context 'when the request is not authenticated' do
-      let(:is_authenticated) { false }
+    include_examples 'using signature to send request'
+
+    context 'when the request is does not pass the http auth' do
+      let(:is_http_authenticated) { false }
 
       it 'returns the error messages' do
         subject

@@ -20,7 +20,7 @@ class PresignUrlGenerator
       access_id: @access_key.access_id,
       key: @key,
       expired_at: @expired_at,
-      permission: permission,
+      permission:,
       signature: compute_signature
     }
 
@@ -39,7 +39,7 @@ class PresignUrlGenerator
       access_key: @access_key,
       bucket_name: @bucket_name,
       key: @key,
-      permission: permission,
+      permission:,
       expired_at: @expired_at
     ).generate
   end

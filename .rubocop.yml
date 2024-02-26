@@ -30,3 +30,6 @@ Lint/EmptyBlock:
 
 Style/ZeroLengthPredicate:
   Enabled: false
+
+Style/HashLikeCase:
+  Enabled: false

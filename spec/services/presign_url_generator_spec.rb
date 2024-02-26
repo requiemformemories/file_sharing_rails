@@ -10,7 +10,7 @@ RSpec.describe PresignUrlGenerator do
       access_key:,
       bucket_name: 'bucket_name',
       key: 'file_key',
-      action: action,
+      action:,
       expired_at: '2024-01-01T00:00:00Z'
     }
   end
@@ -18,7 +18,7 @@ RSpec.describe PresignUrlGenerator do
 
   describe '#generate' do
     let(:action) { 'download' }
-    
+
     context 'when action is `download`' do
       it 'returns the download URL' do
         is_expected.to include('http://localhost:3000/api/buckets/bucket_name/objects/download')

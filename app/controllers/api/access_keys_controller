@@ -9,7 +9,7 @@ module Api
       access_keys = AccessKey.where(user_id: @current_user.id)
       if previous_id.present?
         cursor_id_query = access_keys.select(:id).where(access_id: previous_id,
-                                                     user_id: @current_user.id)
+                                                        user_id: @current_user.id)
       end
       access_keys = access_keys.where('id < (?)', cursor_id_query) if cursor_id_query.present?
       access_keys = access_keys.order(id: :desc).limit(limit)

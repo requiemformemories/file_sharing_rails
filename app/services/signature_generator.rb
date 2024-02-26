@@ -5,7 +5,7 @@ class SignatureGenerator
     @access_key = params[:access_key]
     @bucket_name = params[:bucket_name]
     @key = params[:key]
-    @action = params[:action]
+    @permission = params[:permission]
     @expired_at = params[:expired_at]
   end
 
@@ -16,6 +16,6 @@ class SignatureGenerator
   private
 
   def signature_data
-    "#{@access_key.id}#{@bucket_name}#{@key}#{@action}#{@expired_at}"
+    "#{@access_key.id}#{@bucket_name}#{@key}#{@permission}#{@expired_at}"
   end
 end

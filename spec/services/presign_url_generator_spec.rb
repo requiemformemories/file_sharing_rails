@@ -10,40 +10,49 @@ RSpec.describe PresignUrlGenerator do
       access_key:,
       bucket_name: 'bucket_name',
       key: 'file_key',
-      action: 'download',
+      action: action,
       expired_at: '2024-01-01T00:00:00Z'
     }
   end
-  let(:access_key) { double('AccessKey', id: 'access', secret: 'secret') }
+  let(:access_key) { double('AccessKey', access_id: 'access', secret: 'secret') }
 
   describe '#generate' do
+    let(:action) { 'download' }
+    
     context 'when action is `download`' do
       it 'returns the download URL' do
         is_expected.to include('http://localhost:3000/api/buckets/bucket_name/objects/download')
         is_expected.to include('access_id=access')
         is_expected.to include('expired_at=2024-01-01T00%3A00%3A00Z')
         is_expected.to include('key=file_key')
-        is_expected.to include('signature=c9a606b42a049c7530047725a75aff7d9c81fb783d1a3293ca164eebcf210e15')
+        is_expected.to include('permission=read')
+        is_expected.to include('signature=94a789ed585060d3b4a64c00692294818ff191968e6666e412e909d97fbf0ae8')
       end
     end
 
     context 'when action is `update`' do
+      let(:action) { 'update' }
+
       it 'returns the update URL' do
         is_expected.to include('http://localhost:3000/api/buckets/bucket_name/objects')
         is_expected.to include('access_id=access')
         is_expected.to include('expired_at=2024-01-01T00%3A00%3A00Z')
         is_expected.to include('key=file_key')
-        is_expected.to include('signature=c9a606b42a049c7530047725a75aff7d9c81fb783d1a3293ca164eebcf210e15')
+        is_expected.to include('permission=update')
+        is_expected.to include('signature=94a789ed585060d3b4a64c00692294818ff191968e6666e412e909d97fbf0ae8')
       end
     end
 
     context 'when action is `destroy`' do
+      let(:action) { 'destroy' }
+
       it 'returns the update URL' do
         is_expected.to include('http://localhost:3000/api/buckets/bucket_name/objects')
         is_expected.to include('access_id=access')
         is_expected.to include('expired_at=2024-01-01T00%3A00%3A00Z')
         is_expected.to include('key=file_key')
-        is_expected.to include('signature=c9a606b42a049c7530047725a75aff7d9c81fb783d1a3293ca164eebcf210e15')
+        is_expected.to include('permission=delete')
+        is_expected.to include('signature=94a789ed585060d3b4a64c00692294818ff191968e6666e412e909d97fbf0ae8')
       end
     end
   end

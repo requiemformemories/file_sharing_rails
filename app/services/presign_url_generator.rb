@@ -17,9 +17,10 @@ class PresignUrlGenerator
     params = {
       host: @host,
       bucket_name: @bucket_name,
-      access_id: @access_key.id,
+      access_id: @access_key.access_id,
       key: @key,
       expired_at: @expired_at,
+      permission: permission,
       signature: compute_signature
     }
 
@@ -38,8 +39,21 @@ class PresignUrlGenerator
       access_key: @access_key,
       bucket_name: @bucket_name,
       key: @key,
-      action: @action,
+      permission: permission,
       expired_at: @expired_at
     ).generate
+  end
+
+  def permission
+    case @action
+    when 'download'
+      'read'
+    when 'update'
+      'update'
+    when 'destroy'
+      'delete'
+    else
+      raise ArgumentError, 'Invalid action'
+    end
   end
 end

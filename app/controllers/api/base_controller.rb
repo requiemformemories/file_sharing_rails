@@ -22,7 +22,7 @@ module Api
         access_key:,
         bucket_name: params[:bucket_name],
         key: params[:key],
-        action: action_name,
+        permission: params[:permission],
         expired_at: params[:expired_at],
         signature: params[:signature]
       ).valid_signature?

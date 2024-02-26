@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 class SignatureExaminer
-  attr_reader :access_id, :bucket_name, :key, :action, :created_at, :expired_at, :signature
-
   def initialize(**params)
     @access_key = params[:access_key]
     @bucket_name = params[:bucket_name]
     @key = params[:key]
-    @action = params[:action]
+    @permission = params[:permission]
     @expired_at = params[:expired_at]
     @signature = params[:signature]
     @signature_generator = params[:signature_generator] || SignatureGenerator
@@ -32,7 +30,7 @@ class SignatureExaminer
       access_key: @access_key,
       bucket_name: @bucket_name,
       key: @key,
-      action: @action,
+      permission: @permission,
       expired_at: @expired_at
     ).generate
   end

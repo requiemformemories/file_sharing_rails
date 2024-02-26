@@ -9,6 +9,7 @@ RSpec.describe SignatureExaminer do
       bucket_name: 'test_bucket',
       key: 'test_key',
       action: 'download',
+      permission: 'read',
       expired_at:,
       signature: 'test_signature'
     }

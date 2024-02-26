@@ -5,6 +5,7 @@ class SignatureExaminer
     @access_key = params[:access_key]
     @bucket_name = params[:bucket_name]
     @key = params[:key]
+    @action = params[:action]
     @permission = params[:permission]
     @expired_at = params[:expired_at]
     @signature = params[:signature]
@@ -13,6 +14,7 @@ class SignatureExaminer
 
   def valid_signature?
     return false if expired?
+    return false if @permission != permission_from_action
 
     compute_signature == @signature
   end
@@ -33,5 +35,16 @@ class SignatureExaminer
       permission: @permission,
       expired_at: @expired_at
     ).generate
+  end
+
+  def permission_from_action
+    case @action
+    when 'download'
+      'read'
+    when 'update'
+      'update'
+    when 'destroy'
+      'delete'
+    end
   end
 end

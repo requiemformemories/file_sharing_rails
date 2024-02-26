@@ -16,6 +16,6 @@ class SignatureGenerator
   private
 
   def signature_data
-    "#{@access_key.id}#{@bucket_name}#{@key}#{@permission}#{@expired_at}"
+    "#{@access_key.access_id}#{@bucket_name}#{@key}#{@permission}#{@expired_at}"
   end
 end

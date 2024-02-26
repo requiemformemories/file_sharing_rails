@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe SignatureGenerator do
   describe '#generate' do
-    let(:access_key) { double('AccessKey', id: 'access_key', secret: 'secret') }
+    let(:access_key) { double('AccessKey', access_id: 'access_key', secret: 'secret') }
 
     it 'returns a signature' do
       generator = SignatureGenerator.new(access_key:, bucket_name: 'bucket', key: 'key', permission: 'create',

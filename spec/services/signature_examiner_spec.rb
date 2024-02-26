@@ -8,13 +8,14 @@ RSpec.describe SignatureExaminer do
       access_key: double('AccessKey'),
       bucket_name: 'test_bucket',
       key: 'test_key',
-      action: 'download',
+      action:,
       permission: 'read',
       expired_at:,
       signature: 'test_signature'
     }
   end
   let(:expired_at) { (Time.current + 1.hour).iso8601 }
+  let(:action) { 'download' }
 
   subject { described_class.new(**params) }
 
@@ -38,6 +39,14 @@ RSpec.describe SignatureExaminer do
 
     context 'when the expired_at time is in the past' do
       let(:expired_at) { (Time.current - 1.hour).iso8601 }
+
+      it 'returns false' do
+        expect(subject.valid_signature?).to be false
+      end
+    end
+
+    context 'when the action does not match the permission' do
+      let(:action) { 'destroy' }
 
       it 'returns false' do
         expect(subject.valid_signature?).to be false

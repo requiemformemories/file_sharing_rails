@@ -9,7 +9,7 @@ This is a file sharing web application that allows users to upload and share fil
 1. Clone the repository: `git clone https://github.com/requiemformemories/file_sharing_rails.git`
 2. Build the Docker image: `docker build -t file-sharing-rails .`
 3. 
-4. Run the Docker container: `docker run -p 3000:3000 -file-sharing-rails ./bin/rails server`. If you need to change the binding address, you may provide it with RAILS_SERVER_BIND_ADDRESS environment variable.
+4. Run the Docker container: `docker run -p 3000:3000 -file-sharing-rails ./bin/rails server`.
 
 ## Usage
 

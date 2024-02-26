@@ -313,7 +313,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{host}}/api/buckets/bucket/objects?access_id=7dce83e1-7754-48c8-8336-31042d627d27&expired_at=2024-03-01T18%3A12%3A42Z&key=aaa%2Fbbb%2Fimage3.jpg&signature=81089186ba4592921ef3d5733dfa71ae8b29194a08e565828fd27e2b5cb026dc",
+					"raw": "{{host}}/api/buckets/bucket/objects?access_id=ad6d9424-e53b-498e-8ca2-3fe90834f7ab&expired_at=2024-03-02T01%3A59%3A19Z&key=aaa%2Fbbb%2Fimage3.jpg&permission=update&signature=d7f4b6172698778a2ad0be041ea93fae14bcf6d66644d87baa276c5ec7396a35",
 					"host": [
 						"{{host}}"
 					],
@@ -326,19 +326,23 @@
 					"query": [
 						{
 							"key": "access_id",
-							"value": "7dce83e1-7754-48c8-8336-31042d627d27"
+							"value": "ad6d9424-e53b-498e-8ca2-3fe90834f7ab"
 						},
 						{
 							"key": "expired_at",
-							"value": "2024-03-01T18%3A12%3A42Z"
+							"value": "2024-03-02T01%3A59%3A19Z"
 						},
 						{
 							"key": "key",
 							"value": "aaa%2Fbbb%2Fimage3.jpg"
 						},
 						{
+							"key": "permission",
+							"value": "update"
+						},
+						{
 							"key": "signature",
-							"value": "81089186ba4592921ef3d5733dfa71ae8b29194a08e565828fd27e2b5cb026dc"
+							"value": "d7f4b6172698778a2ad0be041ea93fae14bcf6d66644d87baa276c5ec7396a35"
 						}
 					]
 				}

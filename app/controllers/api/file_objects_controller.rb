@@ -2,6 +2,7 @@
 
 module Api
   class FileObjectsController < BaseController
+    prepend_before_action :authenticate_signature!, only: %i[update destroy download]
     before_action :set_bucket
     before_action :set_key, only: %i[update destroy download]
 

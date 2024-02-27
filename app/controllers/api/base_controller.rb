@@ -14,8 +14,7 @@ module Api
       return if controller_name != 'file_objects' || %w[download update destroy].exclude?(action_name)
       return if params[:signature].blank?
 
-      access_key = AccessKey.where('expired_at > ? OR expired_at IS NULL', Time.current)
-                            .find_by(access_id: params[:access_id], revoked_at: nil)
+      access_key = AccessKey.active.find_by(access_id: params[:access_id])
       raise InvalidCredentials if access_key.nil?
 
       is_valid = SignatureExaminer.new(

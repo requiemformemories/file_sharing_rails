@@ -34,4 +34,68 @@ RSpec.describe AccessKey, type: :model do
       end
     end
   end
+
+  describe '.belongs_to_user' do
+    subject { AccessKey.belongs_to_user(user.id) }
+
+    let(:user) { User.create(username: 'user', password: 'password') }
+    let(:another_user) { User.create(username: 'user2', password: 'password') }
+    let!(:access_key_belongs_to_user) { create(:access_key, user_id: user.id) }
+    let!(:access_key_does_not_belongs_to_user) { create(:access_key, user_id: another_user.id) }
+
+    it 'returns access keys that belong to the user' do
+      expect(subject.size).to eq(1)
+      expect(subject[0]).to eq(access_key_belongs_to_user)
+    end
+  end
+
+  describe '.active' do
+    subject { AccessKey.active }
+
+    let(:user) { User.create(username: 'user', password: 'password') }
+    let!(:long_lived_access_key) { create(:access_key, user_id: user.id) }
+    let!(:not_expired_access_key) { create(:access_key, user_id: user.id, expired_at: 2.days.after) }
+    let!(:expired_access_key) { create(:access_key, user_id: user.id, expired_at: 2.days.ago) }
+    let!(:revoked_access_key) { create(:access_key, user_id: user.id, revoked_at: 2.days.ago) }
+
+    it 'returns access keys that belong to the user' do
+      expect(subject.size).to eq(2)
+      expect(subject).to include(long_lived_access_key, not_expired_access_key)
+    end
+  end
+
+  describe '.previous_id' do
+    subject { AccessKey.previous_id(previous_id) }
+
+    let(:user) { User.create(username: 'user', password: 'password') }
+    let!(:access_key1) { create(:access_key, user_id: user.id) }
+    let!(:access_key2) { create(:access_key, user_id: user.id) }
+
+    context 'when previous_id is not present' do
+      let(:previous_id) { nil }
+
+      it 'returns all access keys' do
+        expect(subject.size).to eq(2)
+        expect(subject).to include(access_key1, access_key2)
+      end
+    end
+    
+    context 'when previous_id is present and the specified record can be retrieved' do
+      let(:previous_id) { access_key2.access_id }
+
+      it 'returns access keys that are created before the previous_id' do
+        expect(subject.size).to eq(1)
+        expect(subject).to include(access_key1)
+      end
+    end
+
+    context 'when previous_id is present and the specified record can not be retrieved' do
+      let(:previous_id) { 'previous_id_not_exist' }
+
+      it 'returns all access keys' do
+        expect(subject.size).to eq(2)
+        expect(subject).to include(access_key1, access_key2)
+      end
+    end
+  end
 end
